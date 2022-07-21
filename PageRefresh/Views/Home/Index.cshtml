@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row" style="margin-top:100px; width: 200px">
+    <ejs-button isPrimary=true id="but" onclick="clickAjax()">
+        <e-content-template>Load PartialView</e-content-template>
+    </ejs-button>
+</div>
+
+<div class="row">
+    <div id="PartialView"></div>
+</div>
+
+<script>
+    function clickAjax() {
+        if (document.querySelector("#PartialView").childElementCount == 0) {
+            var ajax = new ej.base.Ajax('/Home/privacy', 'GET', true);
+            ajax.send().then(function (result) {
+                var fragment = document.createElement('div');
+                fragment.innerHTML = result;
+                ej.base.append([fragment], document.getElementById('PartialView'), true);
+            });
+        }
+    }
+</script>

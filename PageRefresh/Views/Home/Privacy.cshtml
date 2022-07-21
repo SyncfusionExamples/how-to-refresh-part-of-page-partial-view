@@ -1,0 +1,68 @@
+﻿<h2>Section displays controls in partial view</h2>
+<h3>Syncfusion Date Picker</h3>
+<input id="datepicker" type="text" />
+<script>
+        var datepicker = new ej.calendars.DatePicker();
+        datepicker.appendTo('#datepicker');
+
+</script>
+<br />
+<h3>Syncfusion Calendar</h3>
+<div>
+    <ejs-calendar id="calendar"></ejs-calendar>
+</div>
+<br />
+<h3>Syncfusion Pivot table</h3>
+<ejs-pivotview id="PivotView" height="300">
+    <e-datasourcesettings dataSource="@ViewBag.DataSource" expandAll="false" enableSorting="true">
+        <e-formatsettings>
+            <e-field name="Amount" format="C0" useGrouping="true"></e-field>
+        </e-formatsettings>
+        <e-rows>
+            <e-field name="Country"></e-field>
+            <e-field name="Products"></e-field>
+        </e-rows>
+        <e-columns>
+            <e-field name="Year" caption="Year"></e-field>
+            <e-field name="Quarter"></e-field>
+        </e-columns>
+        <e-values>
+            <e-field name="Sold" caption="Units Sold"></e-field>
+            <e-field name="Amount" caption="Sold Amount"></e-field>
+        </e-values>
+    </e-datasourcesettings>
+</ejs-pivotview>
+
+<div style="float: right">
+    <ejs-button id="apply-btn" content="Apply" isPrimary="true"></ejs-button>
+</div>
+
+<script>
+    $(document).ready(function (e) {
+        $("#apply-btn").on("click", function (e) {
+            $.ajax({
+                url: '/Home/PassIntFromView',
+                type: "post",
+                contentType: "application/json; charset=utf-8",
+                success: function (result) {
+                    var pivotObj = document.getElementById('PivotView').ej2_instances[0];
+                    pivotObj.setProperties(
+                        {
+                            dataSourceSettings: {
+                                columns: [{ name: 'year', caption: 'Year' }, { name: 'quarter', caption: 'Quarter' }],
+                                values: [{ name: 'sold', caption: 'Units Sold' }, { name: 'amount', caption: 'Sold Amount' }],
+                                dataSource: result,
+                                rows: [{ name: 'country', caption: 'Country' }, { name: 'products', caption: 'Products' }],
+                                formatSettings: [{ name: 'amount', format: 'C0' }],
+                                expandAll: false,
+                                filters: []
+                            }
+                        },
+                        true
+                    );
+                    pivotObj.refresh();
+                }
+            });
+        });
+    });
+</script>
